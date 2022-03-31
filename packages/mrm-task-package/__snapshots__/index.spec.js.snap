@@ -77,3 +77,5 @@ exports[`should set custom license 1`] = `
   \\"devDependencies\\": {}
 }"
 `;
+
+exports[`should set custom package manager 1`] = `undefined`;

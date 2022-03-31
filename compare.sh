@@ -1,0 +1,9 @@
+meld /Users/mcrowe/.mrm/editorconfig packages/mrm-task-editorconfig
+meld /Users/mcrowe/.mrm/eslint packages/mrm-task-eslint
+meld /Users/mcrowe/.mrm/gitignore packages/mrm-task-gitignore
+meld /Users/mcrowe/.mrm/jest packages/mrm-task-jest
+meld /Users/mcrowe/.mrm/lint-staged packages/mrm-task-lint-staged
+meld /Users/mcrowe/.mrm/package packages/mrm-task-package
+meld /Users/mcrowe/.mrm/prettier packages/mrm-task-prettier
+meld /Users/mcrowe/.mrm/readme packages/mrm-task-readme
+meld /Users/mcrowe/.mrm/typescript packages/mrm-task-typescript

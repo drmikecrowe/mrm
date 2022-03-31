@@ -141,7 +141,7 @@ describe('install()', () => {
 		);
 	});
 
-	it('should not run npm when there are no new packages', () => {
+	it('should run without packages if empty package array is provided', () => {
 		const spawn = jest.fn();
 		createNodeModulesPackageJson('eslint', '4.2.0');
 		createNodeModulesPackageJson('babel-core', '7.1.0');
@@ -152,8 +152,38 @@ describe('install()', () => {
 				'babel-core': '*',
 			}
 		);
-		install(modules, undefined, spawn);
-		expect(spawn).toHaveBeenCalledTimes(0);
+		install([], undefined, spawn);
+		expect(spawn).toHaveBeenCalledTimes(1);
+	});
+
+	it('should run without packages if null package array is provided', () => {
+		const spawn = jest.fn();
+		createNodeModulesPackageJson('eslint', '4.2.0');
+		createNodeModulesPackageJson('babel-core', '7.1.0');
+		createPackageJson(
+			{},
+			{
+				eslint: '*',
+				'babel-core': '*',
+			}
+		);
+		install(null, undefined, spawn);
+		expect(spawn).toHaveBeenCalledTimes(1);
+	});
+
+	it('should run without packages if empty package object is provided', () => {
+		const spawn = jest.fn();
+		createNodeModulesPackageJson('eslint', '4.2.0');
+		createNodeModulesPackageJson('babel-core', '7.1.0');
+		createPackageJson(
+			{},
+			{
+				eslint: '*',
+				'babel-core': '*',
+			}
+		);
+		install({}, undefined, spawn);
+		expect(spawn).toHaveBeenCalledTimes(1);
 	});
 
 	it('should install packages that are in node_modules but not in package.json', () => {

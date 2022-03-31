@@ -1,7 +1,18 @@
 jest.mock('fs');
 jest.mock('git-username');
 jest.mock('mrm-core/src/util/log', () => ({
+	info: jest.fn(),
 	added: jest.fn(),
+}));
+
+const { install } = require('mrm-core/src/npm');
+const runNpm = jest.fn();
+const runYarn = jest.fn();
+
+jest.mock('mrm-core/src/npm', () => ({
+	install,
+	runYarn,
+	runNpm,
 }));
 
 const path = require('path');
@@ -54,4 +65,18 @@ it('should set custom license', async () => {
 		)
 	);
 	expect(vol.toJSON()['/package.json']).toMatchSnapshot();
+});
+
+it('should set custom package manager', async () => {
+	task(
+		await getTaskOptions(
+			task,
+			false,
+			Object.assign({}, options, {
+				manager: 'yarn',
+			})
+		)
+	);
+	expect(runNpm).toHaveBeenCalledTimes(0);
+	expect(runYarn).toHaveBeenCalledTimes(1);
 });

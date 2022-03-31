@@ -54,9 +54,6 @@ function install(deps, options = {}, exec) {
 	}
 
 	const newDeps = getUnsatisfiedDeps(dependencies, versions, { dev });
-	if (newDeps.length === 0) {
-		return;
-	}
 
 	log.info(`Installing ${listify(newDeps)}...`);
 	const versionedDeps = newDeps.map(dep => getVersionedDep(dep, versions));
@@ -127,7 +124,9 @@ function runYarn(deps, options = {}, exec) {
 		? ['add', '--dev', '--ignore-workspace-root-check']
 		: ['add', '--ignore-workspace-root-check'];
 	const remove = ['remove'];
-	const args = (options.remove ? remove : add).concat(deps);
+	const args = _.isEmpty(deps)
+		? []
+		: (options.remove ? remove : add).concat(deps);
 
 	return execCommand(exec, 'yarn', args, {
 		stdio: options.stdio === undefined ? 'inherit' : options.stdio,
@@ -237,7 +236,13 @@ function isUsingYarn() {
 	return fs.existsSync('yarn.lock');
 }
 
-module.exports = {
+const exp = {
 	install,
 	uninstall,
 };
+
+if (process.env.JEST_WORKER_ID) {
+	exp.runYarn = runYarn;
+	exp.runNpm = runNpm;
+}
+module.exports = exp;

@@ -2,9 +2,16 @@
 const path = require('path');
 const meta = require('user-meta');
 const gitUsername = require('git-username');
-const { json } = require('mrm-core');
+const { json, install } = require('mrm-core');
 
-module.exports = function task({ name, url, github, minNode, license }) {
+module.exports = function task({
+	name,
+	url,
+	github,
+	minNode,
+	license,
+	manager,
+}) {
 	const packageName = path.basename(process.cwd());
 	const repository = `${github}/${packageName}`;
 
@@ -41,6 +48,9 @@ module.exports = function task({ name, url, github, minNode, license }) {
 	}
 
 	pkg.save();
+	if (manager !== 'npm') {
+		install([], { [manager]: true });
+	}
 };
 
 module.exports.description = 'Adds package.json';
@@ -75,5 +85,11 @@ module.exports.parameters = {
 		type: 'input',
 		message: 'Enter project license',
 		default: 'MIT',
+	},
+	manager: {
+		type: 'input',
+		message: 'Choose your default package manager',
+		default: 'npm',
+		choices: ['npm', 'yarn'],
 	},
 };

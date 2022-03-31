@@ -111,7 +111,19 @@ function isCommandBelongsToRule(ruleCommands, command) {
 
 module.exports = function task({ lintStagedRules }) {
 	const pkg = packageJson();
-	const allRules = mergeRules(defaultRules, lintStagedRules);
+	const hasTypescript = !!pkg.get('devDependencies.typescript');
+	const defaultRulesWithTypescript = defaultRules.map(rule => {
+		if (hasTypescript) {
+			const tsExtensions = rule.extensions.map(ext => ext.replace('js', 'ts'));
+			rule.extensions.push(...tsExtensions);
+		}
+		return rule;
+	});
+	const allRules = mergeRules(
+		defaultRulesWithTypescript,
+		lintStagedRules,
+		hasTypescript
+	);
 	const existingRules = Object.entries(pkg.get('lint-staged', {}));
 
 	// Remove exising rules that run any of default commands
